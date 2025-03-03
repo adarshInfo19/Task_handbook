@@ -1,8 +1,5 @@
 import os
 import os.path
-import shutil
-import sys
-from datetime import datetime, timedelta
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -168,12 +165,17 @@ class GreytHR:
 
 
 
-def lambda_trigger(all_employee_data):
+def lambda_trigger():
     try:
-        json_string = json.dumps(all_employee_data, indent=2)
+
+        greyt_hr_obj = GreytHR()
+        all_greyhr_emp, cookies = greyt_hr_obj.get_all_employee_data("Userid", "Password")
+
+
+        json_string = json.dumps(all_greyhr_emp, indent=2)
 
         bucket_name = "jsondatacollector"
-        object_key = "employees/employee_data.json"
+        object_key = "employees2/employee_data.json"
 
         s3.put_object(
             Bucket=bucket_name,
@@ -194,22 +196,3 @@ def lambda_trigger(all_employee_data):
             "body": json.dumps({"error": "Failed to upload employee data to S3"})
         }
 
-def main():
-    try:
-        greyt_hr_obj = GreytHR()
-        all_greyhr_emp, cookies = greyt_hr_obj.get_all_employee_data("USER_ID", "PASSWORD")
-
-        print("cookies:", cookies)
-
-        greyt_hr_obj.get_joining_dates(all_greyhr_emp,cookies)
-
-        print("all_greytHR_emp:", all_greyhr_emp)
-
-        lambda_trigger(all_greyhr_emp)
-        
-
-    except Exception as e:
-        print(f"Main execution failed: {str(e)}")
-
-if __name__ == "__main__":
-    main()
