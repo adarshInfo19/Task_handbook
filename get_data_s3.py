@@ -8,7 +8,7 @@ def get_data_from_s3():
 
 
     bucket_name = "jsondatacollector"
-    file_key="employees/employee_data.json"
+    file_key="uploaded_data/employee_data.json"
 
     try:
 

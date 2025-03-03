@@ -1,0 +1,12 @@
+Understanding of the files:
+
+lambda.py -> deployed code on AWS lambda with the dependency of boto3 (dependency resolved through AWS layer)
+
+get_data_from_greytHR -> script for getting the data from greytHR and after creation of file that data will written in that file
+
+employee_data.json -> generated file by get_data_from_greytHR and it contains all the data of employees 
+
+main.py -> from where we trigger the lambda function 
+
+get_data_s3 -> getting the uploaded data from s3
+

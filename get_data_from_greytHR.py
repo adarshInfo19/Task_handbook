@@ -10,9 +10,6 @@ import requests
 import json
 import boto3
 
-s3=boto3.client("s3",region_name="ap-south-1")
-
-# Create downloads directory
 default_downloads_path = os.path.join(os.getcwd(), "temp")
 if not os.path.isdir(default_downloads_path):
     os.mkdir(default_downloads_path)
@@ -164,27 +161,19 @@ class GreytHR:
                 self.browser.quit()
 
 
-
-def lambda_trigger():
+def get_data_from_greytHR():
     try:
 
         greyt_hr_obj = GreytHR()
-        all_greyhr_emp, cookies = greyt_hr_obj.get_all_employee_data("Userid", "Password")
+        all_greyhr_emp, cookies = greyt_hr_obj.get_all_employee_data("UserID", "Password")
+
+        file_name = "employee_data.json"
+
+        with open(file_name, "w") as json_file:
+            json.dump(all_greyhr_emp,json_file,indent=4)
 
 
-        json_string = json.dumps(all_greyhr_emp, indent=2)
-
-        bucket_name = "jsondatacollector"
-        object_key = "employees2/employee_data.json"
-
-        s3.put_object(
-            Bucket=bucket_name,
-            Key=object_key,
-            Body=json_string,
-            ContentType='application/json'
-        )
-
-        print("employee data successfully uplocaded to the s3")
+        print("all emplyoee data ",all_greyhr_emp)
         return {
                 "statusCode": 200,
                 "body": json.dumps({"message": "Employee data upload successful!"})
@@ -196,3 +185,5 @@ def lambda_trigger():
             "body": json.dumps({"error": "Failed to upload employee data to S3"})
         }
 
+
+get_data_from_greytHR()
