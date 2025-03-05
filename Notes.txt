@@ -10,3 +10,8 @@ main.py -> from where we trigger the lambda function
 
 get_data_s3 -> getting the uploaded data from s3
 
+
+Improvement :
+
+- consider the latest file of sending_data_api_gateway , in this file first we fetch the data then make .json file after that through the api gateway we are triggering the aws lambda and in the lambda we have code to push the file into s3
+( we attached aws lambda to api gateway )
